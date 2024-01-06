@@ -1,9 +1,9 @@
 import { DataTypes,Sequelize } from "sequelize";
-import EcSuppliers from "../types/ec_suppliers"
+import EcCustomers from "../types/ec_customers"
 import sequelize from "../src/config/sequelize";
 
 
-EcSuppliers.init({
+EcCustomers.init({
     id: {
         type: DataTypes.INTEGER,
         primaryKey: true,
@@ -54,10 +54,10 @@ EcSuppliers.init({
    
 },{
     sequelize,
-    modelName:'ec_suppliers',
-    tableName:'ec_suppliers',
+    modelName:'ec_customers',
+    tableName:'ec_customers',
     // hooks: {
-    //     beforeCreate: (user:EcSuppliers) => { 
+    //     beforeCreate: (user:EcCustomers) => { 
     //       // Hash the password using bcrypt before creating the record
     //       const hashedPassword = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
     //       user.password = hashedPassword;
@@ -66,4 +66,4 @@ EcSuppliers.init({
 })
 
 
-export default EcSuppliers
+export default EcCustomers
