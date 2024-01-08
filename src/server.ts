@@ -1,9 +1,9 @@
-import express, { urlencoded } from 'express';
-import { Request, Response   } from 'express';
+import express, { NextFunction} from 'express';
 import sequelize from   './config/sequelize.ts';
 import supplierRouteHandler from './routes/supplierRoutes.ts';
 import customerRouteHandler from './routes/customerRoutes.ts';
 import indexRouter from './routes/indexRoutes.ts';
+import { mwExample1,mwExample2 } from './middleware/middleware.ts';
 
 const app = express();
 const PORT = 3000;
@@ -30,11 +30,21 @@ app.listen(PORT, () => {
 
 
 app.use(express.json());
+
 app.use(express.urlencoded({extended:true}))
-app.use("/api/v1",supplierRouteHandler);
+// app.use((req,res,next:NextFunction)=>{
+//   mwExample1(req,res,next)
+// });
+// app.use((req,res,next:NextFunction)=>{
+//   mwExample2(req,res,next)
+// });
+app.use("/api/v1",mwExample1,mwExample2,supplierRouteHandler);
 app.use("/api/v2",customerRouteHandler);
 app.use(indexRouter)
-
+// app.get("/mwexample",(req:CustomRequest,res)=>{
+//   const customProperty=req.customProperty ?? 'not available'
+//   res.send(`Response with modified request property:${customProperty}`);
+// })
 
 // app.use("/api/v2",customerRouteHandler);
 
