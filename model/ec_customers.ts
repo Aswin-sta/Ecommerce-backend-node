@@ -1,7 +1,7 @@
 import { DataTypes,Sequelize } from "sequelize";
 import EcCustomers from "../types/ec_customers"
 import sequelize from "../src/config/sequelize";
-
+import bcrypt from 'bcrypt'
 
 EcCustomers.init({
     id: {
@@ -56,13 +56,13 @@ EcCustomers.init({
     sequelize,
     modelName:'ec_customers',
     tableName:'ec_customers',
-    // hooks: {
-    //     beforeCreate: (user:EcCustomers) => { 
-    //       // Hash the password using bcrypt before creating the record
-    //       const hashedPassword = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
-    //       user.password = hashedPassword;
-    //     },
-    //   },
+    hooks: {
+        beforeCreate: (user:EcCustomers) => { 
+          // Hash the password using bcrypt before creating the record
+          const hashedPassword = bcrypt.hashSync(user.password, bcrypt.genSaltSync(10));
+          user.password = hashedPassword;
+        },
+      },
 })
 
 

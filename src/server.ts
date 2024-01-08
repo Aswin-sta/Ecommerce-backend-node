@@ -3,7 +3,7 @@ import sequelize from   './config/sequelize.ts';
 import supplierRouteHandler from './routes/supplierRoutes.ts';
 import customerRouteHandler from './routes/customerRoutes.ts';
 import indexRouter from './routes/indexRoutes.ts';
-import { mwExample1,mwExample2 } from './middleware/middleware.ts';
+
 
 const app = express();
 const PORT = 3000;
@@ -38,7 +38,7 @@ app.use(express.urlencoded({extended:true}))
 // app.use((req,res,next:NextFunction)=>{
 //   mwExample2(req,res,next)
 // });
-app.use("/api/v1",mwExample1,mwExample2,supplierRouteHandler);
+app.use("/api/v1",supplierRouteHandler);
 app.use("/api/v2",customerRouteHandler);
 app.use(indexRouter)
 // app.get("/mwexample",(req:CustomRequest,res)=>{
