@@ -3,31 +3,19 @@ import sequelize from   './config/sequelize.ts';
 import supplierRouteHandler from './routes/supplierRoutes.ts';
 import customerRouteHandler from './routes/customerRoutes.ts';
 import indexRouter from './routes/indexRoutes.ts';
+import sequelizeSync from './services/sequelize.ts';
+import { connectToMongoDb, stopMongoDb } from './services/mongodb.ts';
 
 
 const app = express();
 const PORT = 3000;
-
-(async ()=>{
-await sequelize
-    .sync({ force:false }) //set force to true to drop and recreate tables on every application start
-    .then(() => {
-      console.log("Database Synced");
-    })
-    .catch((error) => {
-      console.error("Error syncing database:", error);
-    });
-
-  })();
- 
+sequelizeSync();
+connectToMongoDb();
 
 
 app.listen(PORT, () => {
-  console.log(`Server Started \nListening in port :${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`);
 });
-
-
-
 
 app.use(express.json());
 
@@ -38,6 +26,9 @@ app.use(express.urlencoded({extended:true}))
 // app.use((req,res,next:NextFunction)=>{
 //   mwExample2(req,res,next)
 // });
+app.get("/test", async (req, res) => {
+  res.send("working");
+});
 app.use("/api/v1",supplierRouteHandler);
 app.use("/api/v2",customerRouteHandler);
 app.use(indexRouter)
@@ -91,3 +82,12 @@ app.use(indexRouter)
 
 //      return result;
 //  };
+ process.on("SIGINT",()=>{
+  sequelize.close;
+  stopMongoDb();
+ })
+
+ process.on("exit",()=>{
+  sequelize.close;
+  stopMongoDb();
+ })

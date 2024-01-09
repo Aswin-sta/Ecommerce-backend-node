@@ -12,7 +12,7 @@ let loginData :{
   };
 const login=async (req:Request,res:Response):Promise<void> =>{
     loginData=req.body
-
+try{
     if(loginData.client_type==="supplier"){
               const result:EcSuppliersModel|null = await EcSuppliers.findOne({where: { e_mail: loginData.e_mail} })
               if (result && bcrypt.compareSync(loginData.password, result.password)){
@@ -41,7 +41,10 @@ const login=async (req:Request,res:Response):Promise<void> =>{
     }else{
               res.status(422).json("Unprocessable entity")
     }
-  
+}
+catch{
+  res.status(500).json("Internal server error");
+}
 }
 
 
