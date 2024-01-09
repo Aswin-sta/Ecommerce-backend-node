@@ -53,13 +53,15 @@ const resetpassword=async (req:Request,res:Response):Promise<void> =>{
     const{client_type}=req.body.jwt_decoded
 try{
     if(client_type==="supplier"){
-              await EcSuppliers.update({password:new_password},{where: { e_mail: e_mail} })
+      const hashedPassword = bcrypt.hashSync(new_password, bcrypt.genSaltSync(10));
+              await EcSuppliers.update({password:hashedPassword},{where: { e_mail: e_mail} })
               
                   res.status(200).json({"status":"password changed succesfully"});
               
             
     }else if(client_type==="customer"){
-      await EcCustomers.update({password:new_password},{where: { e_mail} })
+      const hashedPassword = bcrypt.hashSync(new_password, bcrypt.genSaltSync(10));
+      await EcCustomers.update({password:hashedPassword},{where: { e_mail} })
       res.status(200).json({"status":"password changed succesfully"});
              
     }else{
