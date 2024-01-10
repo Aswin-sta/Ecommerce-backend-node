@@ -5,7 +5,7 @@ import customerRouteHandler from './routes/customerRoutes.ts';
 import indexRouter from './routes/indexRoutes.ts';
 import sequelizeSync from './services/sequelize.ts';
 import { connectToMongoDb, stopMongoDb } from './services/mongodb.ts';
-
+import cors from 'cors'
 
 const app = express();
 const PORT = 3000;
@@ -20,18 +20,33 @@ app.listen(PORT, () => {
 app.use(express.json());
 
 app.use(express.urlencoded({extended:true}))
+
+app.get("/test/:para", (req, res) => {
+  const {para} = req.params;
+  res.send(`Working, received: ${para}`);
+});
 // app.use((req,res,next:NextFunction)=>{
 //   mwExample1(req,res,next)
 // });
 // app.use((req,res,next:NextFunction)=>{
 //   mwExample2(req,res,next)
 // });
-app.get("/test", async (req, res) => {
-  res.send("working");
-});
+
 app.use("/api/v1",supplierRouteHandler);
 app.use("/api/v2",customerRouteHandler);
 app.use(indexRouter)
+
+const corsOptions = {
+  origin: "*",
+  methods: "GET,PUT,PATCH,POST,DELETE",
+  allowedHeaders: ["Content-Type", "Authorization", "Accept", "application/json"],
+  credentials: true,
+  optionsSuccessStatus: 204,
+};
+
+app.use(cors(corsOptions));
+
+
 // app.get("/mwexample",(req:CustomRequest,res)=>{
 //   const customProperty=req.customProperty ?? 'not available'
 //   res.send(`Response with modified request property:${customProperty}`);
@@ -85,6 +100,7 @@ app.use(indexRouter)
  process.on("SIGINT",()=>{
   sequelize.close;
   stopMongoDb();
+  process.exit();
  })
 
  process.on("exit",()=>{

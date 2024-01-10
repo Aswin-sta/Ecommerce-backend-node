@@ -6,16 +6,16 @@ const db: Db = client.db('ECommerce');
 
 const getProductData = async (req: Request, res: Response): Promise<any> => {
     try {
-        const { product_id }= req.query;
-
-        if (!product_id) {
-            res.status(400).json({ status: "Bad request" });
-            return;
-        }
+        const { id }= req.params; //product id
 
         const productsCollection = db.collection('products');
-        const filter= new ObjectId(product_id as string)
-        const result = await productsCollection.find({ _id:filter}).toArray();
+        const query: Record<string, any> = {};
+        if(id){
+        const filter= new ObjectId(id as string)
+        query._id = filter;
+        }
+        console.log(query)
+        const result = await productsCollection.find(query).toArray();
         console.log(result)
         res.send(result)
 
