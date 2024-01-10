@@ -5,6 +5,8 @@ import { postSupplierData } from '../contollers/supplierController/supplierRegis
 import verifyJWT from '../middleware/verifyJWT.ts';
 import { addProduct } from '../contollers/products/addProducts.ts';
 import { getSupplierData } from '../contollers/supplierController/supplierRegistration.ts';
+import updateProduct from '../contollers/products/editProducts.ts';
+import getProductData from '../contollers/products/getProducts.ts';
 
 const supplierRouteHandler = express.Router()
 
@@ -25,8 +27,16 @@ supplierRouteHandler.post("/register",(req:Request,res:Response)=>{
   });
   
   
+ supplierRouteHandler.get("/viewProducts",verifyJWT,(req:Request,res:Response)=>{
+  getProductData(req,res);
+
+  })
  supplierRouteHandler.post("/addProducts",verifyJWT,(req:Request,res:Response)=>{
   addProduct(req,res);
+
+  })
+ supplierRouteHandler.put("/updateProducts",verifyJWT,(req:Request,res:Response)=>{
+  updateProduct(req,res);
 
   })
 
