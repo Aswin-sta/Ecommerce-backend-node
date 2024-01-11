@@ -5,6 +5,9 @@ import EcCustomersModel from '../../types/ec_customers.ts';
 import { postCustomerData } from '../contollers/cutsomerController/customerController.ts';
 import verifyJWT from '../middleware/verifyJWT.ts';
 import { getCustomerData } from '../contollers/cutsomerController/customerController.ts';
+import { postCustomerCartData } from '../contollers/cart/postCart.ts';
+import { getCustomerCartData } from '../contollers/cart/getCart.ts';
+import { putCustomerCartData } from '../contollers/cart/putCart.ts';
 const customerRouteHandler= express.Router();
 
 
@@ -24,6 +27,21 @@ customerRouteHandler.post("/register",(req:Request,res:Response)=>{
         });
     });
     
+    customerRouteHandler.post("/cart/addProduct",verifyJWT,(req:Request,res:Response)=>{
+      postCustomerCartData(req,res);
+      })
+      
+   
+      customerRouteHandler.get("/cart/viewCart",verifyJWT,(req:Request,res:Response)=>{
+        getCustomerCartData(req,res);
+        })
+           
+   
+      customerRouteHandler.put("/cart/updateCart",verifyJWT,(req:Request,res:Response)=>{
+        putCustomerCartData(req,res);
+        })
+           
+      
     
    
     

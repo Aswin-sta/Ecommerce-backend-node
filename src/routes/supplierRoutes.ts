@@ -27,7 +27,7 @@ supplierRouteHandler.post("/register",(req:Request,res:Response)=>{
   });
   
   
- supplierRouteHandler.get("/viewProducts/:id",verifyJWT,(req:Request,res:Response)=>{
+ supplierRouteHandler.get("/viewProducts",verifyJWT,(req:Request,res:Response)=>{
   getProductData(req,res);
 
   })
