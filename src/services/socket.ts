@@ -8,21 +8,7 @@ const initializeSocket=(server:http.Server)=>{
       })
     
     
-    //   io.on('connection', (socket) => {
-    //     console.log('a user connected');
-      
-    //     socket.emit('event emitted',"hellooooo")
-      
-    //     socket.on('button clicked',()=>{
-    //       console.log("Request from front end");
-    //       socket.emit("reponse from backend","hello from backend")
-    //       console.log("user disconected");
-    //     })
-    //     socket.on('disconnect',()=>{
-    //       console.log("user disconected");
-    //     })
-      
-    //   });
+   
       
    return io;   
       
