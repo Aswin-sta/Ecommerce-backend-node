@@ -1,7 +1,7 @@
 import sequelize from   '../config/sequelize.ts';
 const  sequelizeSync= async ()=>{
     await sequelize
-        .sync({ force:false }) //set force to true to drop and recreate tables on every application start
+        .sync({ force:true}) //set force to true to drop and recreate tables on every application start
         .then(() => {
           console.log("Database Synced");
         })

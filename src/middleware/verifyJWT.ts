@@ -16,7 +16,7 @@ const verifyJWT=(req:Request,res:Response,next:NextFunction)=>{
 
     req.body.jwt_decoded=decoded;
     let version=req.baseUrl
-    
+
     if ((version === '/api/v1' && decoded.client_type !== 'supplier')
     ||(version === '/api/v2' && decoded.client_type !== 'customer')) {
       return res.status(401).json({ error: 'Unauthorized' });

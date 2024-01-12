@@ -6,17 +6,41 @@ import indexRouter from './routes/indexRoutes.ts';
 import sequelizeSync from './services/sequelize.ts';
 import { connectToMongoDb, stopMongoDb } from './services/mongodb.ts';
 import cors from 'cors'
+import {createServer} from 'node:http'
+import initializeSocket from './services/socket.ts';
 
 const app = express();
+const server=createServer(app)
 const PORT = 3000;
+const SOCKETPORT = 3001;
+
 sequelizeSync();
 connectToMongoDb();
+const io =initializeSocket(server);
+
+   io.on('connection', (socket) => {
+        console.log('a user connected');
+      
+        socket.emit('event emitted',"hellooooo")
+      
+        socket.on('button clicked',()=>{
+          console.log("Request from front end");
+          socket.emit("reponse from backend","hello from backend")
+          console.log("user disconected");
+        })
+        socket.on('disconnect',()=>{
+          console.log("user disconected");
+        })
+      
+      });
 
 
 app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
+  console.log(`Server is running on http://localhost:${PORT}`); //for socket 
 });
-
+server.listen(SOCKETPORT, () => {
+  console.log(`Server is running on http://localhost:${SOCKETPORT}`); //for socket 
+});
 app.use(express.json());
 
 app.use(express.urlencoded({extended:true}))
@@ -107,3 +131,5 @@ app.use(cors(corsOptions));
   sequelize.close;
   stopMongoDb();
  })
+
+ export {io}

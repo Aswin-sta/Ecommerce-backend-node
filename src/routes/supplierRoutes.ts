@@ -7,10 +7,12 @@ import { addProduct } from '../contollers/products/addProducts.ts';
 import { getSupplierData } from '../contollers/supplierController/supplierRegistration.ts';
 import updateProduct from '../contollers/products/editProducts.ts';
 import getProductData from '../contollers/products/getProducts.ts';
-
+import multer from 'multer'
 const supplierRouteHandler = express.Router()
 
-supplierRouteHandler.post("/register",(req:Request,res:Response)=>{
+const storage =multer.memoryStorage();
+const upload=multer({storage:storage})
+supplierRouteHandler.post("/register",upload.single("profile_pic"),(req:Request,res:Response)=>{
   postSupplierData(req,res);
 
   })
