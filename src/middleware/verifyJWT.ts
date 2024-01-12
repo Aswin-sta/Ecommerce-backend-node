@@ -12,10 +12,13 @@ const verifyJWT=(req:Request,res:Response,next:NextFunction)=>{
     }    
     let processedToken = token.split('Bearer ')[1];
 
-    const decoded =jwt.verify(processedToken,secret_key)
+    const decoded:jwt.JwtPayload =jwt.verify(processedToken,secret_key) as jwt.JwtPayload
+
     req.body.jwt_decoded=decoded;
-    let version=req.baseUrl.split('/')[2]
-    if ((version === 'v1' && req.body.jwt_decoded.client_type !== 'supplier')||(version === 'v2' && req.body.jwt_decoded.client_type !== 'customer')) {
+    let version=req.baseUrl
+    
+    if ((version === '/api/v1' && decoded.client_type !== 'supplier')
+    ||(version === '/api/v2' && decoded.client_type !== 'customer')) {
       return res.status(401).json({ error: 'Unauthorized' });
     }
     next();
