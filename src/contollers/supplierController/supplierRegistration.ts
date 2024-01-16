@@ -8,7 +8,7 @@ import fs from 'fs';
 import path from 'path';
 import { Readable } from 'stream';
 import { ManagedUpload } from 'aws-sdk/clients/s3';
-const postSupplierData=(req:Request,res:Response):void=>{
+const postSupplierData=async (req:Request,res:Response):Promise<any>=>{
 try{
     let ecSuppliers:EcSuppliersModel=req.body
     
@@ -33,16 +33,9 @@ try{
         ContentType: file?.mimetype,
       }
 
-
-      s3.upload(params, (err: Error, data: ManagedUpload.SendData) => {
-        if (err) {
-        
-          console.log(err)
-        } else {
-         ecSuppliers.profile_pic=data.Location
-          console.log(data)
-        }
-      });
+      const profile_pic_url = await s3UploadAsync(s3, params);
+      ecSuppliers.profile_pic = profile_pic_url.Location;
+    
 
     }
 
@@ -71,7 +64,21 @@ try{
   
        return result;
    };
-  
+
+
+   const s3UploadAsync = (s3:AWS.S3,params: AWS.S3.PutObjectRequest): Promise<ManagedUpload.SendData> => {
+    return new Promise((resolve, reject) => {
+      s3.upload(params, (err: Error, data: ManagedUpload.SendData) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
+    });
+  };
+
+​
 
   export {getSupplierData,postSupplierData}
   

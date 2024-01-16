@@ -8,10 +8,15 @@ import { getCustomerData } from '../contollers/cutsomerController/customerContro
 import { postCustomerCartData } from '../contollers/cart/postCart.ts';
 import { getCustomerCartData } from '../contollers/cart/getCart.ts';
 import { putCustomerCartData } from '../contollers/cart/putCart.ts';
+import getProductData from '../contollers/products/getProducts.ts';
+import multer, { memoryStorage } from 'multer';
+import { checkoutCart } from '../contollers/cart/checkoutCart.ts';
 const customerRouteHandler= express.Router();
 
+const storage=multer.memoryStorage();
+const upload=multer({storage:storage})
 
-customerRouteHandler.post("/register",(req:Request,res:Response)=>{
+customerRouteHandler.post("/register",upload.single("profile_pic"),(req:Request,res:Response)=>{
     postCustomerData(req,res);
     })
     
@@ -27,6 +32,9 @@ customerRouteHandler.post("/register",(req:Request,res:Response)=>{
         });
     });
     
+    customerRouteHandler.get("/viewProduct",verifyJWT,(req:Request,res:Response)=>{
+      getProductData(req,res);
+      })
     customerRouteHandler.post("/cart/addProduct",verifyJWT,(req:Request,res:Response)=>{
       postCustomerCartData(req,res);
       })
@@ -39,6 +47,10 @@ customerRouteHandler.post("/register",(req:Request,res:Response)=>{
    
       customerRouteHandler.put("/cart/updateCart",verifyJWT,(req:Request,res:Response)=>{
         putCustomerCartData(req,res);
+        })
+           
+      customerRouteHandler.post("/cart/checkout",verifyJWT,(req:Request,res:Response)=>{
+        checkoutCart(req,res);
         })
            
       

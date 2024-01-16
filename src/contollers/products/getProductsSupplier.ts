@@ -4,7 +4,7 @@ import { Request, Response } from "express";
 
 const db: Db = client.db('ECommerce');
 
-const getProductData = async (req: Request, res: Response): Promise<any> => {
+const getProductSupplierData = async (req: Request, res: Response): Promise<any> => {
     try {
         const{client_type}=req.body.jwt_decoded
         if (client_type !== 'supplier') {
@@ -25,4 +25,4 @@ const getProductData = async (req: Request, res: Response): Promise<any> => {
     }
 }
 
-export default getProductData;
+export default getProductSupplierData;

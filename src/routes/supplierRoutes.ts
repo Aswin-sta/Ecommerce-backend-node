@@ -6,8 +6,9 @@ import verifyJWT from '../middleware/verifyJWT.ts';
 import { addProduct } from '../contollers/products/addProducts.ts';
 import { getSupplierData } from '../contollers/supplierController/supplierRegistration.ts';
 import updateProduct from '../contollers/products/editProducts.ts';
-import getProductData from '../contollers/products/getProducts.ts';
+import getProductData from '../contollers/products/getProductsSupplier.ts';
 import multer from 'multer'
+import getProductSupplierData from '../contollers/products/getProductsSupplier.ts';
 const supplierRouteHandler = express.Router()
 
 const storage =multer.memoryStorage();
@@ -30,7 +31,7 @@ supplierRouteHandler.post("/register",upload.single("profile_pic"),(req:Request,
   
   
  supplierRouteHandler.get("/viewProducts",verifyJWT,(req:Request,res:Response)=>{
-  getProductData(req,res);
+  getProductSupplierData(req,res);
 
   })
  supplierRouteHandler.post("/addProducts",verifyJWT,(req:Request,res:Response)=>{

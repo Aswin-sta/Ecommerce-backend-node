@@ -7,7 +7,7 @@ const db: Db = client.db("ECommerce");
 export const addProduct= async (req:Request,res:Response):Promise<any>=>{
 
     try{
-    const{product_name,product_category,product_photo,product_stock,...other_data}=req.body
+    const{product_name,product_category, product_price,product_photo,product_stock,...other_data}=req.body
 
     if (!product_name || !product_category || !product_stock) {
         res.status(400).json({ status: "Bad request" });
@@ -19,6 +19,7 @@ const productData = {
     supplier_id:registration_id,
     product_name,
     product_category,
+    product_price,
     product_stock,
     product_photo: Buffer.from(product_photo, 'base64'),
     ...other_data,

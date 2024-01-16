@@ -35,7 +35,6 @@ console.log(updatedProductData)
         if (result.modifiedCount > 0) {
             if(req.body.product_stock==0){
                 io.emit("product out of stock")
-                console.log("hi")
             }
             res.status(200).json({ message: "Update successful" });
         } else {

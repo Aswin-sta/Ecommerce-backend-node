@@ -11,3 +11,4 @@ class EcCart extends Model {
   
   
   export default EcCart
+
