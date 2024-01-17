@@ -6,7 +6,10 @@ import { Db, ObjectId } from 'mongodb';
 import { client } from "../../services/mongodb";
 import EcCustomers from '../../../types/ec_customers.ts';
 import { errorCode } from 'aws-sdk/clients/ivs';
-
+import AWS from 'aws-sdk';
+import path from 'path';
+import { Readable } from 'stream';
+import { ManagedUpload } from 'aws-sdk/clients/s3';
 
 const fs = require("fs");
 
@@ -46,14 +49,14 @@ const checkoutCart= async (req:Request,res:Response):Promise<any>=>{
 console.log(result)
 if(result){
 
-  const csvHeaders = "Item, Price, Quantity";
+  const csvHeaders = "Item, Price, Quantity,Total Price";
   let csvData = '';
   
   const cartProductPriceQunatity = await Promise.all(result.map(async (cv) => {
     const product = await db.collection('products').findOne({ _id: new ObjectId(cv.product_id) });
     
     
-    csvData += `${product?.product_name}, ${product?.product_price}, ${cv.quantity}\n`;
+    csvData += `${product?.product_name}, ${product?.product_price}, ${cv.quantity},${ product?.product_price*cv.quantity}\n`;
   
     
     
@@ -85,11 +88,31 @@ const totalPrice = cartProductPriceQunatity.reduce((acc, price) => {
           }
         });
 
+
+        const accessKeyId = 'AKIA5IOGN2NXNVX6UNHV';
+        const secretAccessKey = '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';
+        
+       
+       const s3= new AWS.S3({
+          accessKeyId: accessKeyId,
+          secretAccessKey: secretAccessKey,
+        });
+    
+        
+          const params : AWS.S3.PutObjectRequest={
+            Bucket: "ecommercebucket1",
+            Key: path.join('invoice', `bill_${paymentIntent.id}`),
+            Body: fs.createReadStream(filePath),
+            ContentType: 'text/csv',
+          }
+    
+          const bill_url = await s3UploadAsync(s3, params);
        
 
         res.status(200).json({
           message: "success",
           stripe_id: paymentIntent.id,
+          bill:bill_url.Location
       });
     }
       
@@ -98,6 +121,19 @@ catch{
     res.status(500).json("Internal server error");
   }
 }
+
+
+const s3UploadAsync = (s3:AWS.S3,params: AWS.S3.PutObjectRequest): Promise<ManagedUpload.SendData> => {
+  return new Promise((resolve, reject) => {
+    s3.upload(params, (err: Error, data: ManagedUpload.SendData) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve(data);
+      }
+    });
+  });
+};
 
     export {checkoutCart}
       

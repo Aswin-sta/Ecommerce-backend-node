@@ -1,3 +1,4 @@
-Item, Price, Quantity
+Item, Price, Quantity,Total Price
 Mariyam Fidha Shoukath Ali 123, 50, 2
-Sample Product, 50, 3
+,100Sample Product, 50, 3
+,150
